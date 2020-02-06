@@ -13,7 +13,7 @@
 
 ### 훈련 1: 프로젝트 폴더를 생성하라.
 
-- 'bitcamp-study/bitcamp-project-client' 디렉토리를 생성한다.
+- 'git/sun-yumway-subway-client' 디렉토리를 생성한다.
 
 ### 훈련 2: 프로젝트 폴더에 자바 프로젝트로 만들라.
 
