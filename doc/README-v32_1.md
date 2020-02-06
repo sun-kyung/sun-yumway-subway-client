@@ -7,7 +7,7 @@
 
 ## 실습 소스 및 결과
 
-- src/main/java/com/eomcs/lms/ClientApp.java 추가
+- src/main/java/sun/yumway/subway/ClientApp.java 추가
 
 ## 실습  
 
