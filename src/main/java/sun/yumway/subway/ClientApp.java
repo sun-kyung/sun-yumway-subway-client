@@ -11,7 +11,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import sun.yumway.subway.handler.BoardAddCommand;
+import sun.yumway.subway.handler.BoardDeleteCommand;
+import sun.yumway.subway.handler.BoardDetailCommand;
 import sun.yumway.subway.handler.BoardListCommand;
+import sun.yumway.subway.handler.BoardUpdateCommand;
 import sun.yumway.subway.handler.Command;
 import sun.yumway.subway.handler.OrderAddCommand;
 import sun.yumway.subway.handler.OrderDeleteCommand;
@@ -65,9 +68,9 @@ public class ClientApp {
     HashMap<String, Command> commandMap = new HashMap<>();
     commandMap.put("/board/list", new BoardListCommand(out, in));
     commandMap.put("/board/add", new BoardAddCommand(out, in, prompt));
-    commandMap.put("/board/detail", new BoardAddCommand(out, in, prompt));
-    commandMap.put("/board/update", new BoardAddCommand(out, in, prompt));
-    commandMap.put("/board/delete", new BoardAddCommand(out, in, prompt));
+    commandMap.put("/board/detail", new BoardDetailCommand(out, in, prompt));
+    commandMap.put("/board/update", new BoardUpdateCommand(out, in, prompt));
+    commandMap.put("/board/delete", new BoardDeleteCommand(out, in, prompt));
     commandMap.put("/order/list", new OrderListCommand(out, in));
     commandMap.put("/order/add", new OrderAddCommand(out, in, prompt));
     commandMap.put("/order/detail", new OrderDetailCommand(out, in, prompt));
@@ -85,8 +88,10 @@ public class ClientApp {
         command = prompt.inputString("\n명령> ");
         if (command.length() == 0)
           continue;
-        if (command.equals("quit")) {
-          System.out.println("안녕!");
+        if (command.equals("quit") || command.equals("/server/stop")) {
+          out.writeUTF(command);
+          out.flush();
+          System.out.println("서버: " + in.readUTF());
           break;
         } else if (command.equals("history")) {
           printCommandHistory(commandStack.iterator());

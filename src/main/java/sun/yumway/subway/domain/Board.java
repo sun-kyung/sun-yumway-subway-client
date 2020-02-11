@@ -5,6 +5,12 @@ import java.sql.Date;
 
 public class Board implements Serializable {
 
+  @Override
+  public String toString() {
+    return "Board [no=" + no + ", title =" + title + ", contents= " + contents + ", today= " + today
+        + ", viewCount = " + viewCount + "]";
+  }
+
   private static final long serialVersionUID = 20200131L;
   private int no;
   private String title;

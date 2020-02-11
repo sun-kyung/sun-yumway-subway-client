@@ -22,7 +22,7 @@ public class OrderUpdateCommand implements Command {
     try {
       int no = prompt.inputInt("번호? ");
 
-      out.writeUTF("/board/detail");
+      out.writeUTF("/order/detail");
       out.writeInt(no);
       out.flush();
 

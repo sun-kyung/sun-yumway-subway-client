@@ -28,7 +28,7 @@ public class BoardListCommand implements Command {
       }
       List<Board> boards = (List<Board>) in.readObject();
       for (Board b : boards) {
-        System.out.printf("\n%d\n%s\n%s\n%s\n%s\n", b.getNo(), b.getTitle(), b.getContents(),
+        System.out.printf("%d, %s, %s, %s, %s\n", b.getNo(), b.getTitle(), b.getContents(),
             b.getToday(), b.getViewCount());
       }
     } catch (Exception e) {

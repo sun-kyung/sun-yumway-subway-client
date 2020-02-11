@@ -20,7 +20,7 @@ public class SideListCommand implements Command {
   @Override
   public void execute() {
     try {
-      out.writeUTF("/board/list");
+      out.writeUTF("/side/list");
       out.flush();
 
       String response = in.readUTF();

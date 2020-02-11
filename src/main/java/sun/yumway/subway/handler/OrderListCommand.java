@@ -19,7 +19,7 @@ public class OrderListCommand implements Command {
   @Override
   public void execute() {
     try {
-      out.writeUTF("/board/list");
+      out.writeUTF("/order/list");
       out.flush();
 
       String response = in.readUTF();
