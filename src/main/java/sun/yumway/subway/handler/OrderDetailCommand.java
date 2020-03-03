@@ -2,19 +2,19 @@ package sun.yumway.subway.handler;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import sun.yumway.subway.dao.OrderDao;
 import sun.yumway.subway.domain.Order;
 import sun.yumway.subway.util.Prompt;
 
 public class OrderDetailCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  OrderDao orderDao;
   Prompt prompt;
 
-  public OrderDetailCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
+  public OrderDetailCommand(OrderDao orderDao, Prompt prompt) {
     this.prompt = prompt;
-    this.out = out;
-    this.in = in;
+    this.orderDao = orderDao;
   }
 
   @Override
@@ -22,17 +22,7 @@ public class OrderDetailCommand implements Command {
     try {
       int no = prompt.inputInt("번호? ");
 
-      out.writeUTF("/order/detail");
-      out.writeInt(no);
-      out.flush();
-
-      String response = in.readUTF();
-
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      Order order = (Order) in.readObject();
+      Order order = orderDao.findByNo(no);
 
       System.out.printf("번호: %d\n", order.getNo());
       System.out.printf("빵: %s\n", order.getBread());

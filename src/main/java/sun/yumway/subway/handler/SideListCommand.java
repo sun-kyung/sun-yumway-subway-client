@@ -3,16 +3,16 @@ package sun.yumway.subway.handler;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+
+import sun.yumway.subway.dao.SideDao;
 import sun.yumway.subway.domain.Side;
 
 public class SideListCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  SideDao sideDao;
 
-  public SideListCommand(ObjectOutputStream out, ObjectInputStream in) {
-    this.out = out;
-    this.in = in;
+  public SideListCommand(SideDao sideDao) {
+    this.sideDao = sideDao;
   }
 
 
@@ -20,15 +20,7 @@ public class SideListCommand implements Command {
   @Override
   public void execute() {
     try {
-      out.writeUTF("/side/list");
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      List<Side> sides = (List<Side>) in.readObject();
+      List<Side> sides = sideDao.findAll();
       for (Side s : sides) {
         System.out.printf("%d, %s, %s, %s\n", s.getNo(), s.getCookie(), s.getBeverage(),
             s.getOthers());

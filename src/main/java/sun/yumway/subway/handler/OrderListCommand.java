@@ -3,31 +3,23 @@ package sun.yumway.subway.handler;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+
+import sun.yumway.subway.dao.OrderDao;
 import sun.yumway.subway.domain.Order;
 
 public class OrderListCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  OrderDao orderDao;
 
-  public OrderListCommand(ObjectOutputStream out, ObjectInputStream in) {
-    this.out = out;
-    this.in = in;
+  public OrderListCommand(OrderDao orderDao) {
+    this.orderDao = orderDao;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public void execute() {
     try {
-      out.writeUTF("/order/list");
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      List<Order> orders = (List<Order>) in.readObject();
+      List<Order> orders = orderDao.findAll();
       for (Order o : orders) {
         System.out.printf("\n%d, %s, %s, %s, %s, %s\n", o.getNo(), o.getBread(), o.getMain(),
             o.getCheese(), o.getVegetable(), o.getSauce());

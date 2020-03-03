@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+
+import sun.yumway.subway.dao.proxy.BoardDaoProxy;
+import sun.yumway.subway.dao.proxy.OrderDaoProxy;
+import sun.yumway.subway.dao.proxy.SideDaoProxy;
 import sun.yumway.subway.handler.BoardAddCommand;
 import sun.yumway.subway.handler.BoardDeleteCommand;
 import sun.yumway.subway.handler.BoardDetailCommand;
@@ -65,22 +69,27 @@ public class ClientApp {
   private void processCommand(ObjectOutputStream out, ObjectInputStream in) {
     Deque<String> commandStack = new ArrayDeque<>();
     Queue<String> commandQueue = new LinkedList<>();
+
+    BoardDaoProxy boardDao = new BoardDaoProxy(in, out);
+    OrderDaoProxy orderDao = new OrderDaoProxy(in, out);
+    SideDaoProxy sideDao = new SideDaoProxy(in, out);
+
     HashMap<String, Command> commandMap = new HashMap<>();
-    commandMap.put("/board/list", new BoardListCommand(out, in));
-    commandMap.put("/board/add", new BoardAddCommand(out, in, prompt));
-    commandMap.put("/board/detail", new BoardDetailCommand(out, in, prompt));
-    commandMap.put("/board/update", new BoardUpdateCommand(out, in, prompt));
-    commandMap.put("/board/delete", new BoardDeleteCommand(out, in, prompt));
-    commandMap.put("/order/list", new OrderListCommand(out, in));
-    commandMap.put("/order/add", new OrderAddCommand(out, in, prompt));
-    commandMap.put("/order/detail", new OrderDetailCommand(out, in, prompt));
-    commandMap.put("/order/update", new OrderUpdateCommand(out, in, prompt));
-    commandMap.put("/order/delete", new OrderDeleteCommand(out, in, prompt));
-    commandMap.put("/side/list", new SideListCommand(out, in));
-    commandMap.put("/side/add", new SideAddCommand(out, in, prompt));
-    commandMap.put("/side/detail", new SideDetailCommand(out, in, prompt));
-    commandMap.put("/side/update", new SideUpdateCommand(out, in, prompt));
-    commandMap.put("/side/delete", new SideDeleteCommand(out, in, prompt));
+    commandMap.put("/board/list", new BoardListCommand(boardDao));
+    commandMap.put("/board/add", new BoardAddCommand(boardDao, prompt));
+    commandMap.put("/board/detail", new BoardDetailCommand(boardDao, prompt));
+    commandMap.put("/board/update", new BoardUpdateCommand(boardDao, prompt));
+    commandMap.put("/board/delete", new BoardDeleteCommand(boardDao, prompt));
+    commandMap.put("/order/list", new OrderListCommand(orderDao));
+    commandMap.put("/order/add", new OrderAddCommand(orderDao, prompt));
+    commandMap.put("/order/detail", new OrderDetailCommand(orderDao, prompt));
+    commandMap.put("/order/update", new OrderUpdateCommand(orderDao, prompt));
+    commandMap.put("/order/delete", new OrderDeleteCommand(orderDao, prompt));
+    commandMap.put("/side/list", new SideListCommand(sideDao));
+    commandMap.put("/side/add", new SideAddCommand(sideDao, prompt));
+    commandMap.put("/side/detail", new SideDetailCommand(sideDao, prompt));
+    commandMap.put("/side/update", new SideUpdateCommand(sideDao, prompt));
+    commandMap.put("/side/delete", new SideDeleteCommand(sideDao, prompt));
 
     try {
       while (true) {

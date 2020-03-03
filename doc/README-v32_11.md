@@ -1,0 +1,30 @@
+# 32_11 - 서버에서 제공한 프록시 객체를 사용하여 데이터를 처리하기
+
+## 학습목표
+
+- 프록시 패턴의 이점을 이해한다.
+
+## 실습 소스 및 결과
+
+- sun/yumway/subway/ClientApp.java 변경
+
+## 실습  
+
+### 훈련 1: 서버 프로젝트(32_11)에서 DAO 프록시 클래스를 가져오라.
+
+- sun.yumway.subway.dao.XxxDao 인터페이스를 가져온다.
+- sun.yumway.subway.dao.proxy 패키지와 그 하위 클래스를 모두 가져온다.
+
+### 훈련 2: BoardXxxCommand 객체가 BoardDaoProxy 객체를 사용하여 데이터를 처리하게 하라.
+
+- sun.yumway.subway.handler.BoardXxxCommand 클래스를 변경한다.
+  - 입출력 스트림 필드를 제거한다.
+  - 생성자에서 프록시 객체를 받는다.
+  - 프록시 객체를 사용하여 데이터를 처리한다.
+- sun.yumway.subway.ClientApp 변경한다.
+  - BoardDaoProxy 객체를 생성한다.
+  - BoardXxxCommand 객체에 주입한다.
+
+
+
+

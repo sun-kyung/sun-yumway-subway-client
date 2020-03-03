@@ -2,19 +2,19 @@ package sun.yumway.subway.handler;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import sun.yumway.subway.dao.OrderDao;
 import sun.yumway.subway.domain.Order;
 import sun.yumway.subway.util.Prompt;
 
 public class OrderUpdateCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  OrderDao orderDao;
   Prompt prompt;
 
-  public OrderUpdateCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
+  public OrderUpdateCommand(OrderDao orderDao, Prompt prompt) {
     this.prompt = prompt;
-    this.out = out;
-    this.in = in;
+    this.orderDao = orderDao;
   }
 
   @Override
@@ -22,17 +22,13 @@ public class OrderUpdateCommand implements Command {
     try {
       int no = prompt.inputInt("번호? ");
 
-      out.writeUTF("/order/detail");
-      out.writeInt(no);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
+      Order oldOrder = null;
+      try {
+        oldOrder = orderDao.findByNo(no);
+      } catch (Exception e) {
+        System.out.println("해당 번호의 샌드위치가 없습니다");
         return;
       }
-
-      Order oldOrder = (Order) in.readObject();
       Order newOrder = new Order();
       newOrder.setBread(
           prompt.inputString(String.format("빵(%s)? ", oldOrder.getBread()), oldOrder.getBread()));
@@ -51,15 +47,7 @@ public class OrderUpdateCommand implements Command {
         System.out.println("게시물 변경을 취소했습니다");
         return;
       }
-      out.writeUTF("/board/update");
-      out.writeObject(newOrder);
-      out.flush();
-
-      response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
+      orderDao.update(newOrder);
       System.out.println("게시글을 변경했습니다");
     } catch (Exception e) {
       System.out.println("명령 실행 중 오류 발생");

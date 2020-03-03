@@ -2,19 +2,19 @@ package sun.yumway.subway.handler;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import sun.yumway.subway.dao.SideDao;
 import sun.yumway.subway.domain.Side;
 import sun.yumway.subway.util.Prompt;
 
 public class SideAddCommand implements Command {
 
   Prompt prompt;
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  SideDao sideDao;
 
-  public SideAddCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
+  public SideAddCommand(SideDao sideDao, Prompt prompt) {
     this.prompt = prompt;
-    this.out = out;
-    this.in = in;
+    this.sideDao = sideDao;
   }
 
   @Override
@@ -25,15 +25,7 @@ public class SideAddCommand implements Command {
     side.setBeverage(prompt.inputString("음료? "));
     side.setOthers(prompt.inputString("그 외? "));
     try {
-      out.writeUTF("/side/add");
-      out.writeObject(side);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
+      sideDao.insert(side);
       System.out.println("저장하였습니다");
     } catch (Exception e) {
       System.out.println("통신 오류 발생");
